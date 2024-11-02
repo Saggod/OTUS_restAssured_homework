@@ -38,7 +38,7 @@ public class PetTests {
     }
 
     @Test
-    public void uplImgToStoreTest() { //Проверка загрузки файла на сервер
+    public void uplImgToStoreTest() { //Проверка загрузки картинки на сервер (но как я понял загрузить можно и просто файл
         uplImgToStoreApi.i = "5";
         File file = new File("src/main/resources/files/t1.jpg");
 
