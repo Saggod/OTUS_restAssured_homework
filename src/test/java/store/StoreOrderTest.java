@@ -30,7 +30,7 @@ public class StoreOrderTest {
                 .complete(complete)
                 .build();
 
-        storeOrderApi.storeOrder(storeOrder)
+        storeOrderApi.storeOrderAdd(storeOrder)
                 .extract().body().as(StoreResponseDTO.class);
 
         StoreResponseDTO responseGetRequest = storeOrderApi.storeGetOrderId(String.valueOf(id))
@@ -53,13 +53,13 @@ public class StoreOrderTest {
                 .quantity(quantity)
                 .build();
 
-        storeOrderApi.storeOrder(storeOrder)
+        storeOrderApi.storeOrderAdd(storeOrder)
                 .extract().body().as(StoreResponseDTO.class);
 
         storeOrderApi.storeOrderDelete(String.valueOf(idDelete))
                 .extract().body().as(StoreResponseDTO.class);
 
-        StoreResponseDTO responseGetRequest = storeOrderApi.storeGetOrderId(String.valueOf(id))
+        StoreResponseDTO responseGetRequest = storeOrderApi.storeGetOrderId(String.valueOf(idDelete))
                 .extract().body().as(StoreResponseDTO.class);
 
         Assertions.assertAll("Check create new responseStoreOrderCreate",

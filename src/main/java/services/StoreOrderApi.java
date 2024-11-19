@@ -21,7 +21,7 @@ public class StoreOrderApi extends AbsBasePageApi {
                 .log().all();
     }
 
-    public ValidatableResponse storeOrder(StoreDTO storeDTO) {
+    public ValidatableResponse storeOrderAdd(StoreDTO storeDTO) {
         return given(spec)
                     .body(storeDTO)
                 .when()
