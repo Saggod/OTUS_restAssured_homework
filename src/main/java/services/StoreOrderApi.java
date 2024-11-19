@@ -30,6 +30,14 @@ public class StoreOrderApi extends AbsBasePageApi {
                     .log().all();
     }
 
+    public ValidatableResponse storeGetOrderId(String i) {
+        return given(spec)
+                .when()
+                .get(BASE_URL + STORE_PATH + "/" + i)
+                .then()
+                .log().all();
+    }
+
     public ValidatableResponse storeOrderDelete(String i) {
         return given(spec)
                 .when()

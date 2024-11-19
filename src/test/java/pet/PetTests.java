@@ -19,7 +19,7 @@ public class PetTests {
 
     @Test
     public void addNewPetTest() {  //Проверка добавления нового Pet
-        int id = 16;
+        int id = 19;
         String name = "T-Rax";
 
         PetDTO petAdd = PetDTO
@@ -28,21 +28,25 @@ public class PetTests {
                 .name(name)
                 .build();
 
-        PetResponseDTO responsePetCreate = petStoreApi.petStore(petAdd)
+        petStoreApi.petStore(petAdd)
                 .extract().body().as(PetResponseDTO.class);
 
+
+        PetResponseDTO petGetResponse = petStoreApi.findPetById(String.valueOf(id))
+                        .extract().body().as(PetResponseDTO.class);
+
         Assertions.assertAll("Check add pet to store",
-                () -> Assertions.assertEquals(id, responsePetCreate.getId(), "Incorrect id"),
-                () -> Assertions.assertEquals(name, responsePetCreate.getName(), "Incorrect name")
-                );
+                () -> Assertions.assertEquals(id, petGetResponse.getId(), "Incorrect id"),
+                () -> Assertions.assertEquals(name, petGetResponse.getName(), "Incorrect name")
+        );
     }
 
     @Test
-    public void uplImgToStoreTest() { //Проверка загрузки картинки на сервер (но как я понял загрузить можно и просто файл
+    public void uplImgToStoreTest() { //Проверка загрузки картинки на сервер (но как я понял загрузить можно и просто файл)
         uplImgToStoreApi.i = "2";
         File file = new File("src/main/resources/files/t1.jpg");
 
-        PetImgUplDTO petImgUplDTO = PetImgUplDTO
+        PetImgUplDTO
                 .builder()
                 .petId(Integer.parseInt(uplImgToStoreApi.i))
                 .additionalMetadata("555")
@@ -55,7 +59,7 @@ public class PetTests {
                 () -> Assertions.assertEquals(200, responsePetUplImg.getCode(), "Incorrect code"),
                 () -> Assertions.assertEquals("additionalMetadata: null\n" +
                         "File uploaded to ./t1.jpg, 5070 bytes", responsePetUplImg.getMessage(), "Incorrect msg")
-                );
+        );
 
     }
 }

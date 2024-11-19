@@ -7,15 +7,15 @@ import services.StoreOrderApi;
 
 
 public class StoreOrderTest {
+    private final int id = 8;
+    private final int petId = 9;
+    private final int quantity = 22;
+    private final int idDelete = 9;
 
     private StoreOrderApi storeOrderApi = new StoreOrderApi();
 
     @Test()
     public void checkOrderCreate() { //Проверка создания нового OrderId, проверяем создание заказа
-
-        int id = 11;
-        int petId = 12;
-        int quantity = 22;
         String shipDate = "2024-10-30T06:13:33.576Z";
         String status = "placed";
         boolean complete = true;
@@ -30,26 +30,42 @@ public class StoreOrderTest {
                 .complete(complete)
                 .build();
 
-        StoreResponseDTO responseStoreOrderCreate = storeOrderApi.storeOrder(storeOrder)
+        storeOrderApi.storeOrder(storeOrder)
                 .extract().body().as(StoreResponseDTO.class);
 
+        StoreResponseDTO responseGetRequest = storeOrderApi.storeGetOrderId(String.valueOf(id))
+                        .extract().body().as(StoreResponseDTO.class);
+
         Assertions.assertAll("Check create new responseStoreOrderCreate",
-                () -> Assertions.assertEquals(11, responseStoreOrderCreate.getId(), "Incorrect Id"),
-                () -> Assertions.assertEquals(12, responseStoreOrderCreate.getPetId(), "Incorrect petId"),
-                () -> Assertions.assertEquals(22, responseStoreOrderCreate.getQuantity(), "Incorrect petId"),
-                () -> Assertions.assertEquals("placed", responseStoreOrderCreate.getStatus(), "Incorrect msg"));
+                () -> Assertions.assertEquals(id, responseGetRequest.getId(), "Incorrect Id"),
+                () -> Assertions.assertEquals(petId, responseGetRequest.getPetId(), "Incorrect petId"),
+                () -> Assertions.assertEquals(quantity, responseGetRequest.getQuantity(), "Incorrect petId"),
+                () -> Assertions.assertEquals("placed", responseGetRequest.getStatus(), "Incorrect msg"));
 
     }
 
     @Test
     public void checkOrderDelete() { //Проверка удаления существующего OrderId, проверка, что удалиться нужный нам заказ
-        storeOrderApi.i = "11";
+        StoreDTO storeOrder = StoreDTO
+                .builder()
+                .id(idDelete)
+                .petId(petId)
+                .quantity(quantity)
+                .build();
 
-        StoreResponseDTO responseStoreOrderDelete = storeOrderApi.storeOrderDelete(storeOrderApi.i)
+        storeOrderApi.storeOrder(storeOrder)
                 .extract().body().as(StoreResponseDTO.class);
+
+        storeOrderApi.storeOrderDelete(String.valueOf(idDelete))
+                .extract().body().as(StoreResponseDTO.class);
+
+        StoreResponseDTO responseGetRequest = storeOrderApi.storeGetOrderId(String.valueOf(id))
+                .extract().body().as(StoreResponseDTO.class);
+
         Assertions.assertAll("Check create new responseStoreOrderCreate",
-                () -> Assertions.assertEquals(200, responseStoreOrderDelete.getCode(), "Incorrect Code"),
-                () -> Assertions.assertEquals(storeOrderApi.i, responseStoreOrderDelete.getMessage(), "Incorrect msg"));
+                () -> Assertions.assertEquals( 1, responseGetRequest.getCode(), "Incorrect Code"),
+                () -> Assertions.assertEquals("error", responseGetRequest.getType(), "Incorrect Type"),
+                () -> Assertions.assertEquals("Order not found", responseGetRequest.getMessage(), "Incorrect msg"));
     }
 
     @Test
