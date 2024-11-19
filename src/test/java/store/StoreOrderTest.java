@@ -3,14 +3,12 @@ package store;
 import dto.StoreDTO;
 import dto.StoreResponseDTO;
 import org.junit.jupiter.api.*;
-import services.StoreOrderCreateApi;
-import services.StoreOrderDeleteApi;
+import services.StoreOrderApi;
 
 
 public class StoreOrderTest {
 
-    private StoreOrderCreateApi storeCreateApi = new StoreOrderCreateApi();
-    private StoreOrderDeleteApi storeOrderDeleteApi = new StoreOrderDeleteApi();
+    private StoreOrderApi storeOrderApi = new StoreOrderApi();
 
     @Test()
     public void checkOrderCreate() { //Проверка создания нового OrderId, проверяем создание заказа
@@ -32,7 +30,7 @@ public class StoreOrderTest {
                 .complete(complete)
                 .build();
 
-        StoreResponseDTO responseStoreOrderCreate = storeCreateApi.storeOrder(storeOrder)
+        StoreResponseDTO responseStoreOrderCreate = storeOrderApi.storeOrder(storeOrder)
                 .extract().body().as(StoreResponseDTO.class);
 
         Assertions.assertAll("Check create new responseStoreOrderCreate",
@@ -44,21 +42,21 @@ public class StoreOrderTest {
     }
 
     @Test
-    public  void checkOrderDelete() { //Проверка удаления существующего OrderId, проверка что удалиться нужный нам заказ
-        storeOrderDeleteApi.i = "5";
+    public void checkOrderDelete() { //Проверка удаления существующего OrderId, проверка, что удалиться нужный нам заказ
+        storeOrderApi.i = "11";
 
-        StoreResponseDTO responseStoreOrderDelete = storeOrderDeleteApi.storeOrderDelete()
+        StoreResponseDTO responseStoreOrderDelete = storeOrderApi.storeOrderDelete(storeOrderApi.i)
                 .extract().body().as(StoreResponseDTO.class);
         Assertions.assertAll("Check create new responseStoreOrderCreate",
                 () -> Assertions.assertEquals(200, responseStoreOrderDelete.getCode(), "Incorrect Code"),
-                () -> Assertions.assertEquals(storeOrderDeleteApi.i, responseStoreOrderDelete.getMessage(), "Incorrect msg"));
+                () -> Assertions.assertEquals(storeOrderApi.i, responseStoreOrderDelete.getMessage(), "Incorrect msg"));
     }
 
     @Test
     public void checkOrderDeleteNotFound() { //Проверка удаления несуществующего OrderId, при удалении несуществующего заказа, у нас ничего не удалиться
-        storeOrderDeleteApi.i = "999999";
+        storeOrderApi.i = "999999";
 
-        StoreResponseDTO responseStoreOrderDelete = storeOrderDeleteApi.storeOrderDelete()
+        StoreResponseDTO responseStoreOrderDelete = storeOrderApi.storeOrderDelete(storeOrderApi.i)
                 .extract().body().as(StoreResponseDTO.class);
         Assertions.assertAll("Check create new responseStoreOrderCreate",
                 () -> Assertions.assertEquals(404, responseStoreOrderDelete.getCode(), "Incorrect Code"),

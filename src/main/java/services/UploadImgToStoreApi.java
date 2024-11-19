@@ -9,16 +9,14 @@ import java.io.File;
 
 import static io.restassured.RestAssured.given;
 
-public class UploadImgToStoreApi {
+public class UploadImgToStoreApi extends AbsBasePageApi{
     public String i;
 
-    private static final String BASE_URI = "https://petstore.swagger.io/v2";
     private static final String USER_PATH = "/pet/{petId}/uploadImage";
     private RequestSpecification spec;
 
     public UploadImgToStoreApi(){
         spec = given()
-                .baseUri(BASE_URI)
                 .contentType("multipart/form-data")
                 .log().all();
     }
@@ -29,7 +27,7 @@ public class UploadImgToStoreApi {
                 .pathParam("petId", petId) // замените на ID питомца
                 .multiPart("file", file)   // добавляем файл к запросу
                 .when()
-                .post(USER_PATH)           // отправляем POST запрос
+                .post(BASE_URL + USER_PATH)           // отправляем POST запрос
                 .then()
                 .log().all();
     }

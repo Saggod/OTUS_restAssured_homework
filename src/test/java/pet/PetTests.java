@@ -39,13 +39,13 @@ public class PetTests {
 
     @Test
     public void uplImgToStoreTest() { //Проверка загрузки картинки на сервер (но как я понял загрузить можно и просто файл
-        uplImgToStoreApi.i = "5";
+        uplImgToStoreApi.i = "2";
         File file = new File("src/main/resources/files/t1.jpg");
 
         PetImgUplDTO petImgUplDTO = PetImgUplDTO
                 .builder()
                 .petId(Integer.parseInt(uplImgToStoreApi.i))
-                .additionalMetadata("55555")
+                .additionalMetadata("555")
                 .build();
 
         UploadImgResponseDTO responsePetUplImg = uplImgToStoreApi.uplImgToStore(uplImgToStoreApi.i, file)
