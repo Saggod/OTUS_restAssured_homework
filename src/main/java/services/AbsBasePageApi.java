@@ -3,7 +3,6 @@ package services;
 
 import io.restassured.specification.RequestSpecification;
 
-import static io.restassured.RestAssured.given;
 
 public abstract class AbsBasePageApi {
     private RequestSpecification spec;
