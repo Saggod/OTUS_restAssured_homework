@@ -1,6 +1,7 @@
 package pet;
 
 
+import dbConnecttions.DbDeleteQuery;
 import dto.PetDTO;
 import dto.PetImgUplDTO;
 import dto.PetResponseDTO;
@@ -16,6 +17,7 @@ public class PetTests {
 
     private static final PetStoreApi petStoreApi = new PetStoreApi();
     private static final UploadImgToStoreApi uplImgToStoreApi = new UploadImgToStoreApi();
+    private static final DbDeleteQuery  dbDeleteQuery = new DbDeleteQuery();
 
     @Test
     public void addNewPetTest() {  //Проверка добавления нового Pet
@@ -39,6 +41,10 @@ public class PetTests {
                 () -> Assertions.assertEquals(id, petGetResponse.getId(), "Incorrect id"),
                 () -> Assertions.assertEquals(name, petGetResponse.getName(), "Incorrect name")
         );
+
+        dbDeleteQuery.deletePetTestDbQuery(id);
+
+
     }
 
     @Test

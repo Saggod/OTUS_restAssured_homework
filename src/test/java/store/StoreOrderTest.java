@@ -1,5 +1,6 @@
 package store;
 
+import dbConnecttions.DbDeleteQuery;
 import dto.StoreDTO;
 import dto.StoreResponseDTO;
 import org.junit.jupiter.api.*;
@@ -13,6 +14,7 @@ public class StoreOrderTest {
     private final int idDelete = 9;
 
     private StoreOrderApi storeOrderApi = new StoreOrderApi();
+    private static final DbDeleteQuery dbDeleteQuery = new DbDeleteQuery();
 
     @Test()
     public void checkOrderCreate() { //Проверка создания нового OrderId, проверяем создание заказа
@@ -42,6 +44,7 @@ public class StoreOrderTest {
                 () -> Assertions.assertEquals(quantity, responseGetRequest.getQuantity(), "Incorrect petId"),
                 () -> Assertions.assertEquals("placed", responseGetRequest.getStatus(), "Incorrect msg"));
 
+        dbDeleteQuery.deleteOrderTest(id);
     }
 
     @Test
