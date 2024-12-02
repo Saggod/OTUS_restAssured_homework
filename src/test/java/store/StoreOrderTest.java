@@ -1,5 +1,6 @@
 package store;
 
+import com.google.inject.Inject;
 import dbConnecttions.DbDeleteQuery;
 import dto.StoreDTO;
 import dto.StoreResponseDTO;
@@ -12,7 +13,7 @@ public class StoreOrderTest {
     private final int petId = 9;
     private final int quantity = 22;
 
-    private StoreOrderApi storeOrderApi = new StoreOrderApi();
+    private static final StoreOrderApi storeOrderApi = new StoreOrderApi();
     private static final DbDeleteQuery dbDeleteQuery = new DbDeleteQuery();
 
     @Test()
@@ -44,7 +45,7 @@ public class StoreOrderTest {
                 () -> Assertions.assertEquals(quantity, responseGetRequest.getQuantity(), "Incorrect petId"),
                 () -> Assertions.assertEquals("placed", responseGetRequest.getStatus(), "Incorrect msg"));
 
-//        dbDeleteQuery.deleteOrderTest(id); //ожно так же запросом удалять, но помоему через @Order удобнее
+//        dbDeleteQuery.deleteOrderTest(id); //можно так же запросом удалять, но помоему через @Order удобнее
     }
 
     @Test
