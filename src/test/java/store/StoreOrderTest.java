@@ -11,12 +11,12 @@ public class StoreOrderTest {
     private final int id = 8;
     private final int petId = 9;
     private final int quantity = 22;
-    private final int idDelete = 9;
 
     private StoreOrderApi storeOrderApi = new StoreOrderApi();
     private static final DbDeleteQuery dbDeleteQuery = new DbDeleteQuery();
 
     @Test()
+    @Order(1)
     public void checkOrderCreate() { //Проверка создания нового OrderId, проверяем создание заказа
         String shipDate = "2024-10-30T06:13:33.576Z";
         String status = "placed";
@@ -44,14 +44,15 @@ public class StoreOrderTest {
                 () -> Assertions.assertEquals(quantity, responseGetRequest.getQuantity(), "Incorrect petId"),
                 () -> Assertions.assertEquals("placed", responseGetRequest.getStatus(), "Incorrect msg"));
 
-        dbDeleteQuery.deleteOrderTest(id);
+//        dbDeleteQuery.deleteOrderTest(id); //ожно так же запросом удалять, но помоему через @Order удобнее
     }
 
     @Test
-    public void checkOrderDelete() { //Проверка удаления существующего OrderId, проверка, что удалиться нужный нам заказ
+    @Order(2)
+    public void checkOrderDelete() { //Проверка удаления существующего OrderId срзданного в методе checkOrderCreate, проверка, что удалиться нужный нам заказ
         StoreDTO storeOrder = StoreDTO
                 .builder()
-                .id(idDelete)
+                .id(id)
                 .petId(petId)
                 .quantity(quantity)
                 .build();
@@ -59,10 +60,10 @@ public class StoreOrderTest {
         storeOrderApi.storeOrderAdd(storeOrder)
                 .extract().body().as(StoreResponseDTO.class);
 
-        storeOrderApi.storeOrderDelete(String.valueOf(idDelete))
+        storeOrderApi.storeOrderDelete(String.valueOf(id))
                 .extract().body().as(StoreResponseDTO.class);
 
-        StoreResponseDTO responseGetRequest = storeOrderApi.storeGetOrderId(String.valueOf(idDelete))
+        StoreResponseDTO responseGetRequest = storeOrderApi.storeGetOrderId(String.valueOf(id))
                 .extract().body().as(StoreResponseDTO.class);
 
         Assertions.assertAll("Check create new responseStoreOrderCreate",
@@ -82,5 +83,4 @@ public class StoreOrderTest {
                 () -> Assertions.assertEquals("Order Not Found", responseStoreOrderDelete.getMessage(), "Incorrect msg"));
     }
 
-    //        31:44
 }
