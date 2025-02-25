@@ -1,12 +1,6 @@
 pipeline {
     agent any
 
-    environment {
-        BROWSER = 'chrome'
-        BASE_URL = 'https://otus.ru'
-        SELENOID_URL = 'http://selenoid:4444/wd/hub'
-    }
-
     stages {
         stage('Checkout') {
             steps {
@@ -17,11 +11,15 @@ pipeline {
         stage('Validate Dockerfile') {
             steps {
                 script {
+                    // Check if Dockerfile exists
                     if (!fileExists('Dockerfile')) {
                         error "Dockerfile not found in the repository root"
                     }
 
+                    // Read Dockerfile content
                     def dockerfile = readFile('Dockerfile')
+
+                    // Check for FROM instruction
                     if (!dockerfile.toLowerCase().trim().contains('from ')) {
                         error "Dockerfile validation failed: No source image provided with FROM instruction"
                     }
@@ -33,22 +31,7 @@ pipeline {
 
         stage('Run Tests') {
             steps {
-                script {
-                    def status = sh(
-                            script: """
-                            mvn clean test \
-                            -DBROWSER=${env.BROWSER} \
-                            -DBASE_URL=${env.BASE_URL} \
-                            -DSELENOID_URL=${env.SELENOID_URL} \
-                            -Dallure.results.directory=target/allure-results
-                        """,
-                            returnStatus: true
-                    )
-
-                    if (status > 0) {
-                        currentBuild.result = 'UNSTABLE'
-                    }
-                }
+                sh 'mvn clean test'
             }
         }
 
@@ -67,7 +50,7 @@ pipeline {
                             properties: [],
                             reportBuildPolicy: 'ALWAYS',
                             results: [[path: 'target/allure-results']],
-                            report: '.target/allure-report'
+                            report: 'target/allure-report'
                     ])
                 }
             }
@@ -76,17 +59,10 @@ pipeline {
 
     post {
         always {
-            script {
-                try {
-                    archiveArtifacts artifacts: 'target/allure-results/**'
-                } catch (Exception e) {
-                    echo "Failed to archive Allure results: ${e.message}"
-                }
-                cleanWs()
-            }
+            cleanWs()
         }
         failure {
-            echo 'Pipeline failed during execution'
+            echo 'Pipeline failed during Dockerfile validation'
         }
     }
 }
