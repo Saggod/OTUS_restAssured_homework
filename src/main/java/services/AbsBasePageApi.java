@@ -13,5 +13,4 @@ public abstract class AbsBasePageApi {
             .substring(0, System.getProperty("base.url").length() - 1);
 
 
-
 }

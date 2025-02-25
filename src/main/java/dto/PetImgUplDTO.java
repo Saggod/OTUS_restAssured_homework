@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PetImgUplDTO {
-
     private int petId;
     private String additionalMetadata;
 
